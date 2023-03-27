@@ -1,18 +1,14 @@
+import { drawrelativeLines, moveRelativeLines, removeRelativeLines } from './relaiveLine.js'
+import { moveInfoPositionX, moveInfoPositionY, moveMainInfoPositionX, moveMainInfoPositionY } from './ui.js'
+
 const horizontalLine = document.createElement('div')
 const verticalLine = document.createElement('div')
 const positionInfo = document.createElement('div')
 
-const relaiveHorLine = document.createElement('div')
-const relativeVerLine = document.createElement('div')
-const relPositionInfo = document.createElement('div')
-
-const posY = localStorage.getItem('posY')
 const posX = localStorage.getItem('posX')
+const posY = localStorage.getItem('posY')
 let y = 0
 let x = 0
-
-let moveInfoPositionX = 0
-let moveInfoPositionY = 0
 
 const runMeasure = 'm'
 const runMeasure2 = 'M'
@@ -34,67 +30,24 @@ const drawLines = () => {
 
 	horizontalLine.style.height = `${localStorage.getItem('posY')}px`
 	verticalLine.style.width = `${localStorage.getItem('posX')}px`
-	positionInfo.style.left = `${posX}px`
-	positionInfo.style.top = `${posY}px`
+	positionInfo.style.left = `${moveMainInfoPositionX + localStorage.getItem('posX')}px`
+	positionInfo.style.top = `${moveMainInfoPositionY + localStorage.getItem('posY')}px`
 	positionInfo.firstElementChild.textContent = `X= ${posX}px`
 	positionInfo.lastElementChild.textContent = `Y= ${posY}px`
 }
-
-const drawrelativeLines = () => {
-	relaiveHorLine.classList.add('horizontalLine')
-	relativeVerLine.classList.add('verticalLine')
-	relPositionInfo.classList.add('position-info')
-	relPositionInfo.innerHTML = '<p>0px</p><p>0px</p>'
-
-	document.querySelector('body').appendChild(relaiveHorLine)
-	document.querySelector('body').appendChild(relativeVerLine)
-	document.querySelector('body').appendChild(relPositionInfo)
-
-	relaiveHorLine.style.borderColor = `green`
-	relativeVerLine.style.borderColor = `green`
-	relaiveHorLine.style.height = `${y}px`
-	relativeVerLine.style.width = `${x}px`
-	relPositionInfo.style.left = `${x}px`
-	relPositionInfo.style.top = `${y}px`
-	relPositionInfo.firstElementChild.textContent = `X= ${localStorage.getItem('posX') - x}px`
-	relPositionInfo.lastElementChild.textContent = `Y= ${localStorage.getItem('posY') - y}px`
-}
-const moveRelativeLines = () => {
-	relaiveHorLine.style.height = `${y}px`
-	relativeVerLine.style.width = `${x}px`
-	relPositionInfo.style.left = `${x + moveInfoPositionX}px`
-	relPositionInfo.style.top = `${y + moveInfoPositionY}px`
-	relPositionInfo.firstElementChild.textContent = `X= ${localStorage.getItem('posX') - x}px`
-	relPositionInfo.lastElementChild.textContent = `Y= ${localStorage.getItem('posY') - y}px`
-}
-const removeRelativeLines = () => {
-	if (relaiveHorLine.classList.length != 0) {
-		relaiveHorLine.classList.remove('horizontalLine')
-		relativeVerLine.classList.remove('verticalLine')
-		relPositionInfo.classList.remove('position-info')
-		document.querySelector('body').removeChild(relaiveHorLine)
-		document.querySelector('body').removeChild(relativeVerLine)
-		document.querySelector('body').removeChild(relPositionInfo)
-	} else {
-		return
-	}
+const mouseHandler = () => {
+	moveRelativeLines(x, y, moveInfoPositionX, moveInfoPositionY)
 }
 
-const followMouse = e => {
-	verticalLine.style.width = `${e.clientX}px`
-	horizontalLine.style.height = `${e.clientY}px`
-	positionInfo.firstElementChild.textContent = `X= ${e.clientX}px`
-	positionInfo.lastElementChild.textContent = `Y= ${e.clientY}px`
-	positionInfo.style.top = `${e.clientY}px`
-	positionInfo.style.left = `${e.clientX}px`
-
-	// localStorage.setItem('posY', y)
-	// localStorage.setItem('posX', x)
+function followMouse() {
+	verticalLine.style.width = `${x}px`
+	horizontalLine.style.height = `${y}px`
+	positionInfo.firstElementChild.textContent = `X= ${x}px`
+	positionInfo.lastElementChild.textContent = `Y= ${y}px`
+	positionInfo.style.left = `${x + moveMainInfoPositionX}px`
+	positionInfo.style.top = `${y + moveMainInfoPositionY}px`
 }
 const moveMeasureInfo = e => {
-	let x = 0
-	let y = 0
-
 	switch (e.key) {
 		case 'ArrowUp':
 			moveInfoPositionY = -35
@@ -109,7 +62,24 @@ const moveMeasureInfo = e => {
 			moveInfoPositionX = 0
 			break
 	}
-	moveRelativeLines()
+	mouseHandler()
+}
+const moveMainMeasureInfo = e => {
+	switch (e.key) {
+		case 'ArrowUp':
+			moveMainInfoPositionY = -35
+			break
+		case 'ArrowDown':
+			moveMainInfoPositionY = 0
+			break
+		case 'ArrowLeft':
+			moveMainInfoPositionX = -70
+			break
+		case 'ArrowRight':
+			moveMainInfoPositionX = 0
+			break
+	}
+	followMouse()
 }
 const updateMousePosition = e => {
 	x = e.clientX
@@ -118,31 +88,35 @@ const updateMousePosition = e => {
 const markPoint = key => {
 	if (isMeasureRel === 0 && isFollow === 0 && key === 'm') {
 		window.addEventListener('mousemove', followMouse)
+		window.addEventListener('keydown', moveMainMeasureInfo)
 		removeRelativeLines()
 		isFollow = 1
 	} else if (isMeasureRel === 0 && isFollow === 1 && key === 'm') {
 		window.removeEventListener('mousemove', followMouse)
+		window.removeEventListener('keydown', moveMainMeasureInfo)
 		localStorage.setItem('posY', y)
 		localStorage.setItem('posX', x)
 		isFollow = 0
 	} else if (isMeasureRel === 0 && isFollow === 0 && key === 'z') {
-		drawrelativeLines()
-		window.addEventListener('mousemove', moveRelativeLines)
+		drawrelativeLines(x, y, localStorage.getItem('posX'), localStorage.getItem('posY'))
+		window.addEventListener('mousemove', mouseHandler)
 		window.addEventListener('keydown', moveMeasureInfo)
 		isMeasureRel = 1
 	} else if (isMeasureRel === 1 && isFollow === 0 && key === 'z') {
-		window.removeEventListener('mousemove', moveRelativeLines)
+		window.removeEventListener('mousemove', mouseHandler)
 		window.removeEventListener('keydown', moveMeasureInfo)
 		isMeasureRel = 0
 	} else if (isMeasureRel === 1 && isFollow === 0 && key === 'm') {
-		window.removeEventListener('mousemove', moveRelativeLines)
+		window.removeEventListener('mousemove', mouseHandler)
 		window.addEventListener('mousemove', followMouse)
+		window.addEventListener('keydown', moveMainMeasureInfo)
 		isMeasureRel = 0
 		isFollow = 1
 		removeRelativeLines()
 	} else {
 		window.removeEventListener('mousemove', followMouse)
-		window.removeEventListener('mousemove', moveRelativeLines)
+		window.removeEventListener('mousemove', mouseHandler)
+		window.removeEventListener('keydown', moveMainMeasureInfo)
 		isMeasureRel = 0
 		isFollow = 0
 		removeRelativeLines()
