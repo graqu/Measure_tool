@@ -1,7 +1,17 @@
-* {
+:root {
+  --mt-line-color: black;
+  --mt-second-line-color: green;
+  --text-background: #ffffff78;
+}
+
+.position-info,
+.horizontalLine,
+.verticalLine,
+.position-info p {
   box-sizing: border-box;
   padding: 0;
   margin: 0;
+  z-index: 101;
 }
 
 .horizontalLine,
@@ -9,21 +19,23 @@
   position: absolute;
   top: 0;
   left: 0;
-  z-index: 10;
   pointer-events: none;
 }
 
 .horizontalLine {
   width: 100%;
+  right: 0;
   height: 244px;
-  border-bottom: 1px dashed black;
+  border-bottom: 1px dashed;
+  border-color: var(--mt-line-color);
 }
 
 .verticalLine {
   width: 100px;
   height: 100%;
-  border-right: 1px dashed black;
-  z-index: 10;
+  bottom: 0;
+  border-right: 1px dashed;
+  border-color: var(--mt-line-color);
   pointer-events: none;
 }
 
@@ -33,8 +45,7 @@
   top: 244px;
   left: 100px;
   background-color: rgba(255, 255, 255, 0.4705882353);
-  border: 1px solid black;
-  z-index: 10;
+  border: 1px solid var(--mt-line-color);
 }
 .position-info p {
   color: black;

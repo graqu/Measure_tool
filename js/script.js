@@ -1,5 +1,21 @@
 import { drawrelativeLines, moveRelativeLines, removeRelativeLines } from './relaiveLine.js'
-import { moveInfoPositionX, moveInfoPositionY, moveMainInfoPositionX, moveMainInfoPositionY } from './ui.js'
+import {
+	moveInfoPositionX,
+	moveInfoPositionY,
+	moveMainInfoPositionX,
+	moveMainInfoPositionY,
+	moveMeasureInfo,
+	moveMainMeasureInfo,
+	runSettings,
+	runSettings2,
+	runMeasure,
+	runMeasure2,
+	relativeMeasure,
+	relativeMeasure2,
+	colorSheme,
+	changeColor,
+	chooseColor,
+} from './ui.js'
 
 const horizontalLine = document.createElement('div')
 const verticalLine = document.createElement('div')
@@ -9,11 +25,8 @@ const posX = localStorage.getItem('posX')
 const posY = localStorage.getItem('posY')
 let y = 0
 let x = 0
-
-const runMeasure = 'm'
-const runMeasure2 = 'M'
-const relativeMeasure = 'z'
-const relativeMeasure2 = 'Z'
+let y0 = 0
+let x0 = 0
 
 let isFollow = 0
 let isMeasureRel = 0
@@ -35,53 +48,23 @@ const drawLines = () => {
 	positionInfo.firstElementChild.textContent = `X= ${posX}px`
 	positionInfo.lastElementChild.textContent = `Y= ${posY}px`
 }
-const mouseHandler = () => {
-	moveRelativeLines(x, y, moveInfoPositionX, moveInfoPositionY)
+export const mouseHandler = () => {
+	moveRelativeLines(x0, y0, moveInfoPositionX, moveInfoPositionY)
 }
 
-function followMouse() {
-	verticalLine.style.width = `${x}px`
-	horizontalLine.style.height = `${y}px`
-	positionInfo.firstElementChild.textContent = `X= ${x}px`
-	positionInfo.lastElementChild.textContent = `Y= ${y}px`
-	positionInfo.style.left = `${x + moveMainInfoPositionX}px`
-	positionInfo.style.top = `${y + moveMainInfoPositionY}px`
+export function followMouse() {
+	verticalLine.style.width = `${x0}px`
+	verticalLine.style.minHeight = `${y0}px`
+	horizontalLine.style.height = `${y0}px`
+	positionInfo.firstElementChild.textContent = `X= ${x0}px`
+	positionInfo.lastElementChild.textContent = `Y= ${y0}px`
+	positionInfo.style.left = `${x0 + moveMainInfoPositionX}px`
+	positionInfo.style.top = `${y0 + moveMainInfoPositionY}px`
 }
-const moveMeasureInfo = e => {
-	switch (e.key) {
-		case 'ArrowUp':
-			moveInfoPositionY = -35
-			break
-		case 'ArrowDown':
-			moveInfoPositionY = 0
-			break
-		case 'ArrowLeft':
-			moveInfoPositionX = -70
-			break
-		case 'ArrowRight':
-			moveInfoPositionX = 0
-			break
-	}
-	mouseHandler()
-}
-const moveMainMeasureInfo = e => {
-	switch (e.key) {
-		case 'ArrowUp':
-			moveMainInfoPositionY = -35
-			break
-		case 'ArrowDown':
-			moveMainInfoPositionY = 0
-			break
-		case 'ArrowLeft':
-			moveMainInfoPositionX = -70
-			break
-		case 'ArrowRight':
-			moveMainInfoPositionX = 0
-			break
-	}
-	followMouse()
-}
+
 const updateMousePosition = e => {
+	x0 = e.pageX
+	y0 = e.pageY
 	x = e.clientX
 	y = e.clientY
 }
@@ -94,8 +77,8 @@ const markPoint = key => {
 	} else if (isMeasureRel === 0 && isFollow === 1 && key === 'm') {
 		window.removeEventListener('mousemove', followMouse)
 		window.removeEventListener('keydown', moveMainMeasureInfo)
-		localStorage.setItem('posY', y)
-		localStorage.setItem('posX', x)
+		localStorage.setItem('posY', y0)
+		localStorage.setItem('posX', x0)
 		isFollow = 0
 	} else if (isMeasureRel === 0 && isFollow === 0 && key === 'z') {
 		drawrelativeLines(x, y, localStorage.getItem('posX'), localStorage.getItem('posY'))
@@ -128,7 +111,10 @@ window.addEventListener('keydown', e => {
 		markPoint(runMeasure)
 	} else if (e.key === relativeMeasure || e.key === relativeMeasure2) {
 		markPoint(relativeMeasure)
+	} else if (e.key === runSettings || e.key === runSettings2) {
+		chooseColor()
 	}
 })
 window.addEventListener('mousemove', updateMousePosition)
 drawLines()
+changeColor()

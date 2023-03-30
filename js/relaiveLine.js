@@ -12,10 +12,11 @@ export const drawrelativeLines = (x, y, localX, localY) => {
 	document.querySelector('body').appendChild(relativeVerLine)
 	document.querySelector('body').appendChild(relPositionInfo)
 
-	relaiveHorLine.style.borderColor = `green`
-	relativeVerLine.style.borderColor = `green`
+	relaiveHorLine.style.borderColor = `var(--mt-second-line-color)`
+	relativeVerLine.style.borderColor = `var(--mt-second-line-color)`
 	relaiveHorLine.style.height = `${y}px`
 	relativeVerLine.style.width = `${x}px`
+	relativeVerLine.style.height = `${window.innerHeight + window.pageYOffset}px`
 	relPositionInfo.style.left = `${x}px`
 	relPositionInfo.style.top = `${y}px`
 	relPositionInfo.firstElementChild.textContent = `X= ${localX - x}px`
