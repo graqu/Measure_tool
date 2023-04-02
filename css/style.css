@@ -1,7 +1,7 @@
 :root {
   --mt-line-color: black;
   --mt-second-line-color: green;
-  --text-background: #ffffff78;
+  --text-background: #ffffffb7;
 }
 
 .position-info,
@@ -44,7 +44,7 @@
   padding: 5px 10px;
   top: 244px;
   left: 100px;
-  background-color: rgba(255, 255, 255, 0.4705882353);
+  background-color: var(--text-background);
   border: 1px solid var(--mt-line-color);
 }
 .position-info p {
