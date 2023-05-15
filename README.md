@@ -12,5 +12,5 @@ CSS: <link rel="stylesheet" href="https://graqu.github.io/Measure_tool/css/style
 JS: <script type="module" src="https://graqu.github.io/Measure_tool/js/script.js"></script>
 
 **Control:**
-M - start/stop main axes
+M - start/stop main axes--
 Z - start/stop support axes
