@@ -16,7 +16,7 @@ Just copy and paste links to Your html when your work is in progress. When you f
 ```
 **Control:**  
 M - start/stop main axes  
-Z - start/stop support axes
-S - light/dark mode
-↑↓← → - (when you moving measure lines), change measurment info position
+Z - start/stop support axes  
+S - light/dark mode  
+↑↓← → - (when you moving measure lines), change measurment info position  
 
