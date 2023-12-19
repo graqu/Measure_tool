@@ -11,7 +11,7 @@ Just copy and paste links to Your html when your work is in progress. When you f
 /////CSS - copypaste between <head> tag:
  <link rel="stylesheet" href="https://graqu.github.io/Measure_tool/css/style.css" />
 
-/////JS - paste on the end end inside <body> of your site:
+/////JS - paste on the end and inside <body> of your site:
 <script type="module" src="https://graqu.github.io/Measure_tool/js/script.js"></script>  
 ```
 **Control:**  
